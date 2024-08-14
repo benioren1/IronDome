@@ -1,26 +1,50 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+using System.Collections.Concurrent;
+
+using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace AttackServer2
+using WebSocketSharp.Server;
+namespace IronDomeServerAttack
 {
-    internal class Program
+    class Program
     {
+
+        public static ConcurrentQueue<Missile> listmissile = new ConcurrentQueue<Missile>();
+        public static ConcurrentQueue<Missile> listmissileforchetz = new ConcurrentQueue<Missile>();
+      
+
         static async Task Main(string[] args)
         {
-            MissileQueue missiles1 = new MissileQueue();
+            
+          
+            WebSocketServer wss = new WebSocketServer("ws://localhost:3108");
+            wss.AddWebSocketService<MissileHandler>("/MissileHandler", () => new MissileHandler(wss,listmissile, listmissileforchetz));
+            ManagerIron manager = new ManagerIron(listmissile,wss);
+            ManagerChetz managerchtz = new ManagerChetz(listmissileforchetz,wss);
 
-            List<Missile> missiles = await CommandAttack.PrintJson();
-            foreach (var mil in missiles)
-            {
+            manager.start();
+            managerchtz.start();
+            wss.Start();
+         
 
-                missiles1.addmissile(mil);
 
-            }
-            Console.WriteLine(missiles1.getlen());
+            Console.WriteLine("Backend server is running. Press Enter to exit...");
+            Console.ReadLine();
+            wss.Stop();
+
+            //MissileQueue missiles1 = new MissileQueue();
+
+            //List<Missile> missiles = await CommandAttack.PrintJson();
+            //foreach (var mil in missiles)
+            //{
+
+            //    missiles1.Addmissile(mil);
+
+            //}
+            //Console.WriteLine(missiles1.getlen());
+
         }
     }
 }

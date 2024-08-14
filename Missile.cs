@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AttackServer2
+namespace IronDomeServerAttack
 {
     internal class Missile
     {
@@ -16,9 +16,13 @@ namespace AttackServer2
         public int Angle { get; set; }
         public int Time { get; set; }
 
+        public float Demage { get; set; }
         public Missile() { }
 
 
 
     }
 }
+
+
+

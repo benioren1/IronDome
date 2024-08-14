@@ -5,11 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using WebSocketSharp;
 using static System.Net.Mime.MediaTypeNames;
 
 
 
-namespace AttackServer2
+namespace IronDomeServerAttack
 {
     internal class CommandAttack
     {
@@ -29,23 +30,24 @@ namespace AttackServer2
                 return string.Empty;
             }
         }
-        public static async Task<List<Missile>> LoadingFile()
+        public static async Task<Missile> LoadingFile(MessageEventArgs json1)
         {
+            string newjson =  json1.ToString();
             var json = await Task.Run(
-                async () => File.ReadAllText("C:\\Users\\benio\\source\\repos\\AttackServer2\\json1.json")
+                async () => File.ReadAllText(newjson)
             );
-            var missiles = JsonSerializer.Deserialize<List<Missile>>(json);
+            var missiles = JsonSerializer.Deserialize<Missile>(json);
             return missiles;
         }
 
 
-        public static double Getdamge(string name)
+        public static float Getdamge(string name)
         {
-            Dictionary<string, double> MissileDamage = new Dictionary<string, double>();
-            MissileDamage["Kasam"] = 0.1;
-            MissileDamage["zalal"] = 0.21;
-            MissileDamage["grad"] = 0.2;
-            MissileDamage["shiab"] = 0.1;
+            Dictionary<string, float> MissileDamage = new Dictionary<string, float>();
+            MissileDamage["Kasam"] = 100;
+            MissileDamage["zalal"] = 120;
+            MissileDamage["grad"] = 80;
+            MissileDamage["shiab"] = 20;
 
             if (MissileDamage.ContainsKey(name))
             {
@@ -56,30 +58,30 @@ namespace AttackServer2
             return 0;
 
         }
-        public static async Task<List<Missile>> PrintJson()
-        {
-            List<Missile> missiles = await CommandAttack.LoadingFile();
-            foreach (var item in missiles)
-            {
-                await Task.Delay(item.Time * 1000); // המתנה לפי זמן הטיל
+        //public static async Task<List<Missile>> PrintJson()
+        //{
+        //    List<Missile> missiles = await CommandAttack.LoadingFile();
+        //    foreach (var item in missiles)
+        //    {
+        //        await Task.Delay(item.Time * 1000); 
 
-                Console.WriteLine($"Name: {item.Name}");
-                Console.WriteLine($"Speed: {item.Speed}");
-                Console.WriteLine($"Muss: {item.Muss}");
+        //        Console.WriteLine($"Name: {item.Name}");
+        //        Console.WriteLine($"Speed: {item.Speed}");
+        //        Console.WriteLine($"Muss: {item.Muss}");
 
-                // הדפסת Origin
-                Console.WriteLine("Origin:");
-                foreach (var kvp in item.Origin)
-                {
-                    Console.WriteLine($"{kvp.Key}: {kvp.Value}");
-                }
+        //        // הדפסת Origin
+        //        Console.WriteLine("Origin:");
+        //        foreach (var kvp in item.Origin)
+        //        {
+        //            Console.WriteLine($"{kvp.Key}: {kvp.Value}");
+        //        }
 
-                Console.WriteLine($"Angle: {item.Angle}");
-                Console.WriteLine($"Time: {item.Time}");
-                Console.WriteLine("\n------------------------");
-            }
-            return missiles;
-        }
+        //        Console.WriteLine($"Angle: {item.Angle}");
+        //        Console.WriteLine($"Time: {item.Time}");
+        //        Console.WriteLine("\n------------------------");
+        //    }
+        //    return missiles;
+        //}
 
     }
 

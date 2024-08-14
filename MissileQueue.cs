@@ -4,16 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AttackServer2
+namespace IronDomeServerAttack
 {
-    internal class MissileQueue : Queue<Missile>
+    internal  class MissileQueue : Queue<Missile>
     {
-        Queue<Missile> missiles = new Queue<Missile>();
 
-        public async Task addmissile(Missile missile)
+        
+       static Queue<Missile> missiles = new Queue<Missile>();
+
+        public MissileQueue(Missile mis )
+        { 
+        this.Addmissile( mis );
+        
+        }
+
+        public void Addmissile(Missile missile)
         {
 
-            missiles.Enqueue(missile);
+             missiles.Enqueue(missile);
 
 
         }
